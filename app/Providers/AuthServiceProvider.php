@@ -32,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(Carbon::now()->addDays(7));
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(30));
         // Passport::pruneRevokedTokens();
-        Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
+        // Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
         //
     }
 }
