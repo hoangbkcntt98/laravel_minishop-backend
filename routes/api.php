@@ -3,8 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\Auth\LoginController;
-use Laravel\Socialite\Facades\Socialite;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +21,6 @@ Route::post('/register', [AuthController::class,'register']);
 Route::post('/login', [AuthController::class,'login']);
 Route::get('/logout', [AuthController::class,'logout'])->middleware('auth:api');
 
-// Route::get('auth/social',[ LoginController::class,'show'])->name('social.login');
-Route::get('oauth/{driver}', [LoginController::class,'redirectToProvider'])->name('social.oauth');
-Route::get('oauth/{driver}/callback', [LoginController::class,'handleProviderCallback'])->name('social.callback');
+Route::get('auth/social',[ AuthController::class,'show'])->name('social.login');
+Route::get('oauth/{driver}', [AuthController::class,'redirectToProvider'])->name('social.oauth');
+Route::get('oauth/{driver}/callback', [AuthController::class,'handleProviderCallback'])->name('social.callback');
