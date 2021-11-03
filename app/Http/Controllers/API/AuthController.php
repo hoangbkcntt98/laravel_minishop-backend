@@ -63,6 +63,7 @@ class AuthController extends Controller
 
 
     }
+    // callback
     public function redirectToProvider($driver)
     {
         if( ! $this->isProviderAllowed($driver) ) {
