@@ -136,7 +136,9 @@ class AuthController extends Controller
                 'provider' => $driver,
                 'provider_id' => $providerUser->id,
                 'access_token' => $providerUser->token
+                
             ]);
+            $user->markEmailAsVerified();
         } else {
             // create a new user
             $user = User::create([
