@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Response\Response;
 use App\Status\Status;
+use Exception;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -33,9 +34,15 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::findOrFail($id);
         $res = [];
+        try{
+            $user = User::findOrFail($id);
+        }catch(Exception $e){
+            $res = new Response('Not found',null,Status::USER_NOT_FOUND);
+            return $res -> createJsonResponse();
+        }
         $res = new Response(null,$user,Status::GET_USER_SUCCESS);
+       
         return $res -> createJsonResponse();
     }
 
