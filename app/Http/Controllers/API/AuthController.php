@@ -8,19 +8,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Laravel\Socialite\Facades\Socialite;
+use App\Response\Response;
+use App\Status\Status;
 
 class AuthController extends Controller
 {
     protected $providers = [
-        'github','facebook','google','twitter'
+        'github', 'facebook', 'google', 'twitter'
     ];
-    public function show(){
-        return "Hello";
-    }
+    // public function show()
+    // {
+    //     return "Hello";
+    // }
     public function register(Request $request)
     {
-        // return response(['user' => 'access_token' ]);
-
+        // return Status::REGISTER_SUCCESSFULLY;
+        $res = []; 
+        
         $validatedData = $request->validate([
             'name' => 'required|max:55',
             'email' => 'email|required|unique:users',
@@ -29,50 +33,54 @@ class AuthController extends Controller
 
         $validatedData['password'] = bcrypt($request->password);
         $user = User::create($validatedData);
-        $user->sendEmailVerificationNotification();
-        // try{
-            
+        try {
+            $user->sendEmailVerificationNotification();
+        } catch (Exception $e) {
+            $res =  new Response('Cannot Send Email',['errors'=>$e->getMessage()],Status::CANNOT_SEND_EMAIL);
+            return $res->createJsonResponse();
+        }
 
-        // }catch(Exception $e){
-        //     return response()->json(['error'=>$e],200);
-        // }
-        
-        $accessToken = $user->createToken('authToken')->accessToken;
-
-        return response(['user' => $user, 'access_token' => $accessToken]);
+        $accessToken = $user->createToken('authToken');
+        $res =  new Response('Register Successfully',['user'=>$user,'token'=>$accessToken],Status::REGISTER_SUCCESSFULLY);
+        return $res->createJsonResponse();
+       
+       
     }
 
     public function login(Request $request)
     {
+        $res = [];
         $loginData = $request->validate([
             'email' => 'email|required',
             'password' => 'required'
         ]);
 
         if (!auth()->attempt($loginData)) {
-            return response(['message' => 'Invalid Credentials']);
+            $res = new Response('Sai ten dang nhap hoac mat khau',null,Status::LOGIN_FAILE);
+            // return response(['message' => 'Invalid Credentials']);
+            return $res->createJsonResponse();
         }
         $user = Auth::user();
-        $res = [];
-        $res['token'] = $user->createToken('authToken')->accessToken;
-        $res['name'] = $user ->name;
+        $data = [];
+        $data['token'] = $user->createToken('authToken')->accessToken;
+        $data['user'] = $user;
         // return "helo";
+        $res = new Response('Login success',$data,Status::LOGIN_SUCCESS);
         // $accessToken = auth()->user()->createToken('authToken')->accessToken;
-        return response()->json($res,200);
+        return $res->createJsonResponse();
     }
     public function logout(Request $request)
     {
-        
+
         $token = $request->user()->token();
         $token->revoke();
-        return response(['success'=>$request]);
-
-
+        $res = new Response('Logout',null,Status::LOGOUT_SUCCESS);
+        return $res -> createJsonResponse();
     }
     // callback
     public function redirectToProvider($driver)
     {
-        if( ! $this->isProviderAllowed($driver) ) {
+        if (!$this->isProviderAllowed($driver)) {
             return $this->sendFailedResponse("{$driver} is not currently supported");
         }
 
@@ -84,37 +92,41 @@ class AuthController extends Controller
         }
     }
 
-  
-    public function handleProviderCallback( $driver )
+
+    public function handleProviderCallback($driver)
     {
         try {
             $user = Socialite::driver($driver)->stateless()->user();
         } catch (Exception $e) {
             return $this->sendFailedResponse($e->getMessage());
         }
-        return empty( $user->email )
+        return empty($user->email)
             ? $this->sendFailedResponse("No email id returned from {$driver} provider.")
             : $this->loginOrCreateAccount($user, $driver);
     }
 
-    protected function sendSuccessResponse($res)
+    protected function sendSuccessResponse($data)
     {
-        return response()->json(['user'=>$res],200);
+        $response = [];
+        $response = new Response('Login with driver',$data,Status::LOGIN_SUCCESS);
+        return $response->createJsonResponse();
     }
 
     protected function sendFailedResponse($msg = null)
     {
-        return response(['msg'=>$msg],400);   
+        $response = [];
+        $response = new Response($msg,null,Status::LOGIN_FAILE);
+        return $response->createJsonResponse();
+        // return response(['msg' => $msg], 400);
     }
 
     protected function loginOrCreateAccount($providerUser, $driver)
     {
         // check for already has account
-        // dump($providerUser);
         $user = User::where('email', $providerUser->getEmail())->first();
 
         // if user already found
-        if( $user ) {
+        if ($user) {
             // update the avatar and provider that might have changed
             $user->update([
                 'avatar' => $providerUser->avatar,
@@ -134,12 +146,13 @@ class AuthController extends Controller
                 // user can use reset password to create a password
                 'password' => ''
             ]);
+            $user->markEmailAsVerified();
         }
         Auth::login($user, true);
         $user = Auth::user();
         $res = [];
         $res['token'] = $user->createToken('authToken')->accessToken;
-        $res['name'] = $user ->name;
+        $res['name'] = $user->name;
         return $this->sendSuccessResponse($res);
     }
 
@@ -147,5 +160,4 @@ class AuthController extends Controller
     {
         return in_array($driver, $this->providers) && config()->has("services.{$driver}");
     }
-
 }
