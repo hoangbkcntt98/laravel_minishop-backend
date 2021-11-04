@@ -9,6 +9,7 @@ class Status{
     const MAIL_VERIFIED = 204;
     const SEND_MAIL = 205;
     const SEND_MAIL_SUCCESS = 206;
+    const GET_USER_SUCCESS = 207;
   
 
 }
