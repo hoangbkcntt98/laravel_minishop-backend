@@ -38,7 +38,8 @@ class AuthController extends Controller
 
             $user->sendEmailVerificationNotification();
         } catch (Exception $e) {
-            User::delete($user->id);
+            $user = User::find($user->id);
+            $user->delete();
             $res =  new Response('Cannot Send Email', ['errors' => $e->getMessage()], Status::CANNOT_SEND_EMAIL);
             return $res->createJsonResponse();
         }
