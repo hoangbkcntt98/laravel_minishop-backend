@@ -25,21 +25,34 @@ class AuthController extends Controller
         // return Status::REGISTER_SUCCESSFULLY;
         $res = [];
 
-        $validatedData = $request->validate([
-            'name' => 'required|max:55',
-            'email' => 'email|required|unique:users',
-            'password' => 'required|confirmed',
-            'phone' => 'max:13',
-        ]);
+       
 
         $validatedData['password'] = bcrypt($request->password);
-        $user = User::create($validatedData);
+        
+        try{
+            $validatedData = $request->validate([
+                'name' => 'required|max:55',
+                'email' => 'email|required',
+                'password' => 'required|confirmed',
+                'phone' => 'max:13',
+            ]);
+            $user = User::where(['email',$request->email]);
+            if($user){
+                $res = new Response('Duplicated Email',['field'=>'email'],Status::REGISTER_FAILE);
+                return $res -> createJsonResponse();
+            }
+            $user = User::create($validatedData);
+        }catch(Exception $e){
+            $res = new Response('Cannot regsiter',$e->getMessage(),Status::REGISTER_FAILE);
+            return $res -> createJsonResponse();
+        }   
+       
         try {
 
             $user->sendEmailVerificationNotification();
         } catch (Exception $e) {
-            $user = User::find($user->id);
-            $user->delete();
+            // $user = User::find($user->id);
+            // $user->delete();
             $res =  new Response('Cannot Send Email', ['errors' => $e->getMessage()], Status::CANNOT_SEND_EMAIL);
             return $res->createJsonResponse();
         }
