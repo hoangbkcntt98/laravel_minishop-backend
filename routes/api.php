@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\VerificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,3 +25,7 @@ Route::get('/logout', [AuthController::class,'logout'])->middleware('auth:api');
 Route::get('auth/social',[ AuthController::class,'show'])->name('social.login');
 Route::get('oauth/{driver}', [AuthController::class,'redirectToProvider'])->name('social.oauth');
 Route::get('oauth/{driver}/callback', [AuthController::class,'handleProviderCallback'])->name('social.callback');
+
+// email verification
+Route::get('/email/verify/{id}',[VerificationController::class,'verify']) -> name('verification.verify');
+Route::get('/email/resend',[VerificationController::class,'resend']) -> name('verification.resends');

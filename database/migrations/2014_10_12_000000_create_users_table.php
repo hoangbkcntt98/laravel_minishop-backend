@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('provider', 20)->nullable();
             $table->string('provider_id')->nullable();
             $table->string('access_token')->nullable();
+            $table->string('phone',13)->nullable();
             
         });
     }

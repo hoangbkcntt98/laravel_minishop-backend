@@ -28,9 +28,15 @@ class AuthController extends Controller
         ]);
 
         $validatedData['password'] = bcrypt($request->password);
-
         $user = User::create($validatedData);
+        $user->sendEmailVerificationNotification();
+        // try{
+            
 
+        // }catch(Exception $e){
+        //     return response()->json(['error'=>$e],200);
+        // }
+        
         $accessToken = $user->createToken('authToken')->accessToken;
 
         return response(['user' => $user, 'access_token' => $accessToken]);
