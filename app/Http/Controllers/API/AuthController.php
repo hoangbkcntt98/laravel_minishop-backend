@@ -35,8 +35,10 @@ class AuthController extends Controller
         $validatedData['password'] = bcrypt($request->password);
         $user = User::create($validatedData);
         try {
+            
             $user->sendEmailVerificationNotification();
         } catch (Exception $e) {
+            User::delete($user->id);
             $res =  new Response('Cannot Send Email',['errors'=>$e->getMessage()],Status::CANNOT_SEND_EMAIL);
             return $res->createJsonResponse();
         }

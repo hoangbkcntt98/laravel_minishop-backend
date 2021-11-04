@@ -31,4 +31,4 @@ Route::get('oauth/{driver}/callback', [AuthController::class,'handleProviderCall
 Route::get('/email/verify/{id}',[VerificationController::class,'verify']) -> name('verification.verify');
 Route::get('/email/resend',[VerificationController::class,'resend']) -> name('verification.resends');
 // get user infor
-Route::get('users/{id}',[UserController::class,'show']);
+Route::get('users/{id}/{token}',[UserController::class,'show']);
