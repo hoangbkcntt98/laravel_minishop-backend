@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    
+    public function all(Request $request){
+        return User::all();
+    }
 
     /**
      * Store a newly created resource in storage.

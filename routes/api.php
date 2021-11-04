@@ -32,3 +32,4 @@ Route::get('/email/verify/{id}',[VerificationController::class,'verify']) -> nam
 Route::get('/email/resend',[VerificationController::class,'resend']) -> name('verification.resends');
 // get user infor
 Route::get('users/{id}',[UserController::class,'show']);
+Route::get('/users',[UserController::class,'all']);
