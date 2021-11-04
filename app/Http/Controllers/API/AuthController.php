@@ -24,9 +24,6 @@ class AuthController extends Controller
     {
         // return Status::REGISTER_SUCCESSFULLY;
         $res = [];
-
-       
-
         $validatedData['password'] = bcrypt($request->password);
         
         try{
@@ -36,9 +33,9 @@ class AuthController extends Controller
                 'password' => 'required|confirmed',
                 'phone' => 'max:13',
             ]);
-            $user = User::where(['email',$request->email]);
+            $user = User::where([['email','=',$request->email]])->first();
             if($user){
-                $res = new Response('Duplicated Email',['field'=>'email'],Status::REGISTER_FAILE);
+                $res = new Response('Duplicated Email',$user,Status::REGISTER_FAILE);
                 return $res -> createJsonResponse();
             }
             $user = User::create($validatedData);
