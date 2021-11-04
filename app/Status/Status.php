@@ -4,6 +4,7 @@ class Status{
     const CANNOT_SEND_EMAIL = 501;
     const LOGIN_FAILE = 502;
     const REGISTER_SUCCESSFULLY = 201;
+    const REGISTER_FAILE = 503;
     const LOGIN_SUCCESS = 202;
     const LOGOUT_SUCCESS=203;
     const MAIL_VERIFIED = 204;

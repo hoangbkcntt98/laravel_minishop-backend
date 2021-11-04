@@ -23,31 +23,29 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         // return Status::REGISTER_SUCCESSFULLY;
-        $res = []; 
-        
+        $res = [];
+
         $validatedData = $request->validate([
             'name' => 'required|max:55',
             'email' => 'email|required|unique:users',
             'password' => 'required|confirmed',
-            'phone' =>'max:13',
+            'phone' => 'max:13',
         ]);
 
         $validatedData['password'] = bcrypt($request->password);
         $user = User::create($validatedData);
         try {
-            
+
             $user->sendEmailVerificationNotification();
         } catch (Exception $e) {
             User::delete($user->id);
-            $res =  new Response('Cannot Send Email',['errors'=>$e->getMessage()],Status::CANNOT_SEND_EMAIL);
+            $res =  new Response('Cannot Send Email', ['errors' => $e->getMessage()], Status::CANNOT_SEND_EMAIL);
             return $res->createJsonResponse();
         }
 
         $accessToken = $user->createToken('authToken');
-        $res =  new Response('Register Successfully',['user'=>$user,'token'=>$accessToken],Status::REGISTER_SUCCESSFULLY);
+        $res =  new Response('Register Successfully', ['user' => $user, 'token' => $accessToken], Status::REGISTER_SUCCESSFULLY);
         return $res->createJsonResponse();
-       
-       
     }
 
     public function login(Request $request)
@@ -59,7 +57,7 @@ class AuthController extends Controller
         ]);
 
         if (!auth()->attempt($loginData)) {
-            $res = new Response('Sai ten dang nhap hoac mat khau',null,Status::LOGIN_FAILE);
+            $res = new Response('Sai ten dang nhap hoac mat khau', null, Status::LOGIN_FAILE);
             // return response(['message' => 'Invalid Credentials']);
             return $res->createJsonResponse();
         }
@@ -68,7 +66,7 @@ class AuthController extends Controller
         $data['token'] = $user->createToken('authToken')->accessToken;
         $data['user'] = $user;
         // return "helo";
-        $res = new Response('Login success',$data,Status::LOGIN_SUCCESS);
+        $res = new Response('Login success', $data, Status::LOGIN_SUCCESS);
         // $accessToken = auth()->user()->createToken('authToken')->accessToken;
         return $res->createJsonResponse();
     }
@@ -77,8 +75,8 @@ class AuthController extends Controller
 
         $token = $request->user()->token();
         $token->revoke();
-        $res = new Response('Logout',null,Status::LOGOUT_SUCCESS);
-        return $res -> createJsonResponse();
+        $res = new Response('Logout', null, Status::LOGOUT_SUCCESS);
+        return $res->createJsonResponse();
     }
     // callback
     public function redirectToProvider($driver)
@@ -111,14 +109,14 @@ class AuthController extends Controller
     protected function sendSuccessResponse($data)
     {
         $response = [];
-        $response = new Response('Login with driver',$data,Status::LOGIN_SUCCESS);
+        $response = new Response('Login with driver', $data, Status::LOGIN_SUCCESS);
         return $response->createJsonResponse();
     }
 
     protected function sendFailedResponse($msg = null)
     {
         $response = [];
-        $response = new Response($msg,null,Status::LOGIN_FAILE);
+        $response = new Response($msg, null, Status::LOGIN_FAILE);
         return $response->createJsonResponse();
         // return response(['msg' => $msg], 400);
     }
@@ -136,22 +134,28 @@ class AuthController extends Controller
                 'provider' => $driver,
                 'provider_id' => $providerUser->id,
                 'access_token' => $providerUser->token
-                
+
             ]);
             $user->markEmailAsVerified();
         } else {
-            // create a new user
-            $user = User::create([
-                'name' => $providerUser->getName(),
-                'email' => $providerUser->getEmail(),
-                'avatar' => $providerUser->getAvatar(),
-                'provider' => $driver,
-                'provider_id' => $providerUser->getId(),
-                'access_token' => $providerUser->token,
-                // user can use reset password to create a password
-                'password' => ''
-            ]);
-            $user->markEmailAsVerified();
+            // check if account has email 
+            if ($providerUser->getEmail()) {
+                // create a new user
+                $user = User::create([
+                    'name' => $providerUser->getName(),
+                    'email' => $providerUser->getEmail(),
+                    'avatar' => $providerUser->getAvatar(),
+                    'provider' => $driver,
+                    'provider_id' => $providerUser->getId(),
+                    'access_token' => $providerUser->token,
+                    // user can use reset password to create a password
+                    'password' => ''
+                ]);
+                $user->markEmailAsVerified();
+            }else{
+                $res= new Response('Not have email',null,Status::REGISTER_FAILE);
+                return $res ->createJsonResponse();
+            }
         }
         Auth::login($user, true);
         $user = Auth::user();
