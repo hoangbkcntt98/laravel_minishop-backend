@@ -20,6 +20,10 @@ class AuthController extends Controller
     // {
     //     return "Hello";
     // }
+    public function checkAcc($email){
+        $user = User::where('email', $email)->first();
+        return $user?true:false;
+    }
     public function register(Request $request)
     {
         // return Status::REGISTER_SUCCESSFULLY;
@@ -67,7 +71,10 @@ class AuthController extends Controller
             'email' => 'email|required',
             'password' => 'required'
         ]);
-
+        if(!$this -> checkAcc($request->email)){
+            $res = new Response('Khong ton tai tai khoan',null,Status::ACCOUNT_NOT_EXIST);
+            return $res ->createJsonResponse();
+        }
         if (!auth()->attempt($loginData)) {
             $res = new Response('Sai ten dang nhap hoac mat khau', null, Status::LOGIN_FAILE);
             // return response(['message' => 'Invalid Credentials']);

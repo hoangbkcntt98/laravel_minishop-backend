@@ -12,6 +12,7 @@ class Status{
     const SEND_MAIL_SUCCESS = 206;
     const GET_USER_SUCCESS = 207;
     const USER_NOT_FOUND = 504;
+    const ACCOUNT_NOT_EXIST= 505;
   
 
 }
