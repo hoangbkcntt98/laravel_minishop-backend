@@ -12,6 +12,6 @@ class Response {
         $this->data = $data;
     }
     public function createJsonResponse(){
-        return response()->json(['message'=>$this->message,'data' =>$this->data],$this->status);
+        return response()->json(['message'=>$this->message,'status' => $this->status,'data' =>$this->data]);
     }
 }
