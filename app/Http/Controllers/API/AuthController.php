@@ -145,7 +145,7 @@ class AuthController extends Controller
                 'avatar' => $providerUser->avatar,
                 'provider' => $driver,
                 'provider_id' => $providerUser->id,
-                'access_token' => $providerUser->token
+                // 'access_token' => $providerUser->token
 
             ]);
             $user->markEmailAsVerified();
@@ -159,7 +159,7 @@ class AuthController extends Controller
                     'avatar' => $providerUser->getAvatar(),
                     'provider' => $driver,
                     'provider_id' => $providerUser->getId(),
-                    'access_token' => $providerUser->token,
+                    // 'access_token' => $providerUser->token,
                     // user can use reset password to create a password
                     'password' => ''
                 ]);
