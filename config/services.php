@@ -16,12 +16,12 @@ return [
     'facebook' => [
         'client_id' => env('FACEBOOK_ID'),
         'client_secret' => env('FACEBOOK_SECRET'),
-        'redirect' => env('APP_URL') . '/api/oauth/facebook/callback',
+        'redirect' => env('APP_URL') . '/api/auth/facebook/callback',
     ],
     'google' => [
         'client_id'     => env('GL_ID'),
         'client_secret' => env('GL_SECRET'),
-        'redirect'      => env('APP_URL') . '/api/oauth/google/callback',
+        'redirect'      => env('APP_URL') . '/api/auth/google/callback',
     ],
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
