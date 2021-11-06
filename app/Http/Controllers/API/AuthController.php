@@ -61,7 +61,7 @@ class AuthController extends Controller
         }
 
         $accessToken = $user->createToken('authToken');
-        $res =  new Response('Register Successfully', ['user' => $user, 'token' => $accessToken], Status::REGISTER_SUCCESSFULLY);
+        $res =  new Response('Register Successfully', ['name' => $user->name, 'token' => $accessToken], Status::REGISTER_SUCCESSFULLY);
         return $res->createJsonResponse();
     }
 
@@ -83,7 +83,7 @@ class AuthController extends Controller
         }
         $user = Auth::user();
         $data = [];
-        $data['token'] = $user->createToken('authToken')->accessToken;
+        $data['token'] = $user->createToken('authToken');
         $data['user'] = $user;
         // return "helo";
         $res = new Response('Login success', $data, Status::LOGIN_SUCCESS);
@@ -180,7 +180,7 @@ class AuthController extends Controller
         Auth::login($user, true);
         $user = Auth::user();
         $res = [];
-        $res['token'] = $user->createToken('authToken')->accessToken;
+        $res['token'] = $user->createToken('authToken');
         $res['name'] = $user->name;
         return $this->sendSuccessResponse($res);
     }

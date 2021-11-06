@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VerificationController;
+use Laravel\Passport\Passport;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -33,3 +34,4 @@ Route::get('/email/resend',[VerificationController::class,'resend']) -> name('ve
 // get user infor
 Route::get('users/{id}',[UserController::class,'show']);
 Route::get('/users',[UserController::class,'all']);
+Passport::routes();
