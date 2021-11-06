@@ -1,3 +1,3 @@
 #!/bin/sh
-php artisan migrate:fresh
-php aritsan passport:install
+echo yes|php artisan migrate:fresh
+php artisan passport:install
