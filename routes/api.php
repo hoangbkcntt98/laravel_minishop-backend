@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -33,5 +34,9 @@ Route::get('/email/verify/{id}',[VerificationController::class,'verify']) -> nam
 Route::get('/email/resend',[VerificationController::class,'resend']) -> name('verification.resends');
 // get user infor
 Route::get('users/{id}',[UserController::class,'show']);
-Route::get('/users',[UserController::class,'all']);
+Route::prefix('admin')->group(function(){
+    Route::post('login',[AdminController::class,'adminLogin'])->name('admin.adminLogin');
+    Route::post('register',[AdminController::class,'adminRegister'])->name('admin.readminRister');
+});
+Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scope:get-user']);
 Passport::routes();

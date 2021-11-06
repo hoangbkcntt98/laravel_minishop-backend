@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Carbon;
 
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +30,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes();
+        Passport::tokensCan([
+            'get-user' => 'Can Get User',
+            'add-product' => 'Can Get Product',
+            'view-product' => 'View Product',
+            'cart' => 'Interactive with card',
+        ]);
         Passport::personalAccessTokensExpireIn(Carbon::now()->addDays(7));
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(7));
 

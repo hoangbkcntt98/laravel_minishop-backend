@@ -16,10 +16,6 @@ class AuthController extends Controller
     protected $providers = [
         'github', 'facebook', 'google', 'twitter'
     ];
-    // public function show()
-    // {
-    //     return "Hello";
-    // }
     public function checkAcc($email){
         $user = User::where('email', $email)->first();
         return $user?true:false;
@@ -60,7 +56,7 @@ class AuthController extends Controller
             return $res->createJsonResponse();
         }
 
-        $accessToken = $user->createToken('authToken');
+        $accessToken = $user->createToken('authToken',['view-product','cart']);
         $res =  new Response('Register Successfully', ['name' => $user->name, 'token' => $accessToken], Status::REGISTER_SUCCESSFULLY);
         return $res->createJsonResponse();
     }
@@ -83,11 +79,11 @@ class AuthController extends Controller
         }
         $user = Auth::user();
         $data = [];
-        $data['token'] = $user->createToken('authToken');
+        $data['token'] = $user->createToken('authToken',['view-product','cart']);
         $data['user'] = $user;
         // return "helo";
         $res = new Response('Login success', $data, Status::LOGIN_SUCCESS);
-        // $accessToken = auth()->user()->createToken('authToken')->accessToken;
+        // $accessToken = auth()->user()->createToken('authToken',['view-product','cart'])->accessToken;
         return $res->createJsonResponse();
     }
     public function logout(Request $request)
@@ -180,7 +176,7 @@ class AuthController extends Controller
         Auth::login($user, true);
         $user = Auth::user();
         $res = [];
-        $res['token'] = $user->createToken('authToken');
+        $res['token'] = $user->createToken('authToken',['view-product','cart']);
         $res['name'] = $user->name;
         return $this->sendSuccessResponse($res);
     }
