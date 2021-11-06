@@ -38,5 +38,5 @@ Route::prefix('admin')->group(function(){
     Route::post('login',[AdminController::class,'adminLogin'])->name('admin.adminLogin');
     Route::post('register',[AdminController::class,'adminRegister'])->name('admin.readminRister');
 });
-Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scope:user']);
+Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scope:admin']);
 Passport::routes();

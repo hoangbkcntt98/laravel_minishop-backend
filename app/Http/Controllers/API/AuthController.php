@@ -56,7 +56,7 @@ class AuthController extends Controller
             return $res->createJsonResponse();
         }
 
-        $accessToken = $user->createToken('authToken',['view-product','cart']);
+        $accessToken = $user->createToken('authToken',['user']);
         $res =  new Response('Register Successfully', ['name' => $user->name, 'token' => $accessToken], Status::REGISTER_SUCCESSFULLY);
         return $res->createJsonResponse();
     }
@@ -79,11 +79,11 @@ class AuthController extends Controller
         }
         $user = Auth::user();
         $data = [];
-        $data['token'] = $user->createToken('authToken',['view-product','cart']);
+        $data['token'] = $user->createToken('authToken',['user']);
         $data['user'] = $user;
         // return "helo";
         $res = new Response('Login success', $data, Status::LOGIN_SUCCESS);
-        // $accessToken = auth()->user()->createToken('authToken',['view-product','cart'])->accessToken;
+        // $accessToken = auth()->user()->createToken('authToken',['user'])->accessToken;
         return $res->createJsonResponse();
     }
     public function logout(Request $request)
@@ -176,7 +176,7 @@ class AuthController extends Controller
         Auth::login($user, true);
         $user = Auth::user();
         $res = [];
-        $res['token'] = $user->createToken('authToken',['view-product','cart']);
+        $res['token'] = $user->createToken('authToken',['user']);
         $res['name'] = $user->name;
         return $this->sendSuccessResponse($res);
     }

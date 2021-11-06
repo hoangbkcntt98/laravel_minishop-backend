@@ -31,10 +31,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
         Passport::tokensCan([
-            'user' => 'Can Get User',
-            'crud-product' => 'Can Get Product',
-            'view-product' => 'View Product',
-            'cart' => 'Interactive with card',
+            'user' => 'user role',
+            'admin' => 'admin role',
+            'guest' => 'guest role',
+            // 'cart' => 'Interactive with card',
         ]);
         Passport::personalAccessTokensExpireIn(Carbon::now()->addDays(7));
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(7));
