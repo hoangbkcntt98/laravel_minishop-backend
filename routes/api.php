@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VerificationController;
 use Laravel\Passport\Passport;
@@ -40,3 +41,4 @@ Route::prefix('admin')->group(function(){
 });
 Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scope:admin']);
 Passport::routes();
+Route::get('/sync',[ProductController::class,'getAll']);
