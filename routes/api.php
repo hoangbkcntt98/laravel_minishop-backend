@@ -25,9 +25,9 @@ Route::post('/register', [AuthController::class,'register']);
 Route::post('/login', [AuthController::class,'login']);
 Route::get('/logout', [AuthController::class,'logout'])->middleware('auth:api');
 
-Route::get('auth/social',[ AuthController::class,'show'])->name('social.login');
-Route::get('oauth/{driver}', [AuthController::class,'redirectToProvider'])->name('social.oauth');
-Route::get('oauth/{driver}/callback', [AuthController::class,'handleProviderCallback'])->name('social.callback');
+// Route::get('auth/social',[ AuthController::class,'show'])->name('social.login');
+Route::get('auth/{driver}', [AuthController::class,'redirectToProvider'])->name('social.oauth');
+Route::get('auth/{driver}/callback', [AuthController::class,'handleProviderCallback'])->name('social.callback');
 
 // email verification
 Route::get('/email/verify/{id}',[VerificationController::class,'verify']) -> name('verification.verify');
@@ -38,5 +38,5 @@ Route::prefix('admin')->group(function(){
     Route::post('login',[AdminController::class,'adminLogin'])->name('admin.adminLogin');
     Route::post('register',[AdminController::class,'adminRegister'])->name('admin.readminRister');
 });
-Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scope:get-user']);
+Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scope:user']);
 Passport::routes();

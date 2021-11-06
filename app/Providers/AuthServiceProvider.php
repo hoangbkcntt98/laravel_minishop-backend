@@ -31,8 +31,8 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
         Passport::tokensCan([
-            'get-user' => 'Can Get User',
-            'add-product' => 'Can Get Product',
+            'user' => 'Can Get User',
+            'crud-product' => 'Can Get Product',
             'view-product' => 'View Product',
             'cart' => 'Interactive with card',
         ]);
