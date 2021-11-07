@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
 use App\Response\Response;
 use App\Status\Status;
 use Exception;
@@ -24,6 +23,96 @@ class ProductController extends Controller
         }
         return $temp;
     }
+    public function getField($objList,$fields)
+    {
+        $temp = $objList;
+
+        # code...
+    }
+    public function initBase(Request $request){
+        $properties = [
+            [
+                'parent_id' => 0,
+                'description' => "",
+                'code' => 'SIZE',
+                'name' => 'Size',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => 'XS',
+                'name' => 'XS',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => 'S',
+                'name' => 'S',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => 'M',
+                'name' => 'M',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => 'L',
+                'name' => 'L',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => 'XL',
+                'name' => 'XL',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => 'XXL',
+                'name' => 'XXL',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => '80',
+                'name' => '80',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => '90',
+                'name' => '90',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => '100',
+                'name' => '100',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => '110',
+                'name' => '110',
+            ],
+            [
+                'parent_id' => 1,
+                'description' => "",
+                'code' => '120',
+                'name' => '120',
+            ],
+            //id = 13
+            [
+                'parent_id' => 0,
+                'description' => "",
+                'code' => 'MS',
+                'name' => 'Màu sắc',
+            ],
+        ];
+
+    }
     public function getAll(Request $request)
     {
         $res = [];
@@ -42,13 +131,46 @@ class ProductController extends Controller
                 'limit_quantity_to_warn' => false,
                 'last_imported_price' => false,
             ]);
-            // get brand
-            $brands = Http::get($this->pancakeURL."brand",[
-                'access_token' => $this->token,
-            ])['data'];
-            $brands =$this->removeFields($brands,['inserted_at','updated_at']);
-            Brand::insert($brands);
             $products = $products['data'];
+            // $products=collect($products);
+            $products = array_map(function($element){
+                $properties = $element['product_attributes'];
+                $colors = $properties[0]['values'];
+                $sizes = [];
+                // dd($properties);
+                if(isset($properties[1])){
+                    $sizes = $properties[1]['values'];
+                }
+                $variations = $element['variations'];
+                $variations = array_map(function($variation){
+                    // dd($variation);
+                    $size = [];
+                    if(isset($variation['fields'][1]['value'])){
+                        $size = $variation['fields'][1]['value'];
+                    }
+                    return [
+                        'custom_id' => $variation['custom_id'],
+                        'display_id' => $variation['display_id'],
+                        'color' =>$variation['fields'][0]['value'],
+                        'size' => $size,
+                        'images' => $variation['images'],
+                        'retail_price' => $variation['retail_price'],
+                        'weight' => $variation['weight'],
+                        'wholesale_price' => $variation['wholesale_price']
+                    ];
+                },$variations);
+                
+                return [
+                    'name'=>$element['name'],
+                    'display_id' => $element['display_id'],
+                    'custom_id' =>$element['custom_id'],
+                    'colors' =>$colors,
+                    'sizes' =>$sizes,
+                    'variations'=>$variations,
+                    // 'price' =>$variations['price']
+                ];
+            },$products);
+            // dd($products);  
             $res = new Response('Get products success',$products,Status::GET_PRODUCT_SUCCESS);
         } catch (Exception $e) {
             $res = new Response('Get product Errors',$e->getMessage(),Status::GET_PRODUCT_FAILE);

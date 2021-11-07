@@ -33,19 +33,19 @@ class TestController extends Controller
         $product_test = [
             [
                 'name' => 'Product 1',
-                'price' => 1000,
+                // 'price' => 1000,
                 // 'web_brand_id' => 'brand_1',
                 'display_id' =>1
             ],
             [
                 'name' => 'Product 2',
-                'price' => 2000,
+                // 'price' => 2000,
                 // 'web_brand_id' => 'brand_2',
                 'display_id' =>2
             ],
             [
                 'name' => 'Product 3',
-                'price' => 2000,
+                // 'price' => 2000,
                 // 'web_brand_id' => 'brand_1',
                 'display_id' =>3
             ],

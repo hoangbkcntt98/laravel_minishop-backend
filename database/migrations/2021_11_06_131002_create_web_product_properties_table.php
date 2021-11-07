@@ -18,6 +18,7 @@ class CreateWebProductPropertiesTable extends Migration
             $table->integer('parent_id');
             $table->string('description');
             $table->string('name');
+            $table->string('code');
             $table->tinyInteger('status')->nullable()->default(1);
             $table->timestamps();
         });
