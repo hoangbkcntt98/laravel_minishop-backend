@@ -29,90 +29,6 @@ class ProductController extends Controller
 
         # code...
     }
-    public function initBase(Request $request){
-        $properties = [
-            [
-                'parent_id' => 0,
-                'description' => "",
-                'code' => 'SIZE',
-                'name' => 'Size',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => 'XS',
-                'name' => 'XS',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => 'S',
-                'name' => 'S',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => 'M',
-                'name' => 'M',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => 'L',
-                'name' => 'L',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => 'XL',
-                'name' => 'XL',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => 'XXL',
-                'name' => 'XXL',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => '80',
-                'name' => '80',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => '90',
-                'name' => '90',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => '100',
-                'name' => '100',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => '110',
-                'name' => '110',
-            ],
-            [
-                'parent_id' => 1,
-                'description' => "",
-                'code' => '120',
-                'name' => '120',
-            ],
-            //id = 13
-            [
-                'parent_id' => 0,
-                'description' => "",
-                'code' => 'MS',
-                'name' => 'Màu sắc',
-            ],
-        ];
-
-    }
     public function getAll(Request $request)
     {
         $res = [];
@@ -166,6 +82,7 @@ class ProductController extends Controller
                     'custom_id' =>$element['custom_id'],
                     'colors' =>$colors,
                     'sizes' =>$sizes,
+                    'image' => isset($variations[0]['images'][0])?$variations[0]['images'][0]:null,
                     'variations'=>$variations,
                     // 'price' =>$variations['price']
                 ];

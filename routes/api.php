@@ -42,5 +42,5 @@ Route::prefix('admin')->group(function(){
 });
 Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scope:admin']);
 Passport::routes();
-Route::get('/sync',[ProductController::class,'getAll']);
+Route::get('/products',[ProductController::class,'getAll']);
 Route::get('/test',[TestController::class,'test']);
