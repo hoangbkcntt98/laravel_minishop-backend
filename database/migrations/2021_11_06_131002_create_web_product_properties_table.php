@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBrandsTable extends Migration
+class CreateWebProductPropertiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateBrandsTable extends Migration
      */
     public function up()
     {
-        Schema::create('web_brands', function (Blueprint $table) {
-            $table->string('id')->unique();
+        Schema::create('web_product_properties', function (Blueprint $table) {
+            $table->id();
+            $table->integer('parent_id');
+            $table->string('description');
             $table->string('name');
-            $table->bigInteger('shop_id');
-            $table->string('description')->nullable();
+            $table->tinyInteger('status')->nullable()->default(1);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateBrandsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('web_product_properties');
     }
 }
