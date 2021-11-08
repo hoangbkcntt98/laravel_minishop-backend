@@ -88,9 +88,10 @@ class ProductController extends Controller
                     // 'price' =>$variations['price']
                 ];
             },$products);
-            $products['total_pages'] = $total_pages;
+            $data['products'] = $products ;
+            $data['total_pages'] = $total_pages;
             // dd($products);  
-            $res = new Response('Get products success',$products,Status::GET_PRODUCT_SUCCESS);
+            $res = new Response('Get products success',$data,Status::GET_PRODUCT_SUCCESS);
         } catch (Exception $e) {
             $res = new Response('Get product Errors',$e->getMessage(),Status::GET_PRODUCT_FAILE);
         }
