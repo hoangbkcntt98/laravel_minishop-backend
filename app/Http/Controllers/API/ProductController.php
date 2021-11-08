@@ -29,25 +29,9 @@ class ProductController extends Controller
 
         # code...
     }
-    public function getAll(Request $request)
+    public function formatOutput($products,$dataName,$num = null)
     {
-        $res = [];
-        try {
-            // get all product
-            $page = $request->query('page')?$request->query('page'):1;
-            $pageSize = $request->query('page_size')?$request->query('page_size'):30;
-
-            $products = Http::get($this->pancakeURL."products", [
-                'access_token' => $this->token,
-                'page' => $page,
-                'page_size' => $pageSize,
-                'nearly_out_of_stock' => false,
-                'sell_fast' => false,
-                'sell_slow' => false,
-                'limit_quantity_to_warn' => false,
-                'last_imported_price' => false,
-            ]);
-            $total_pages = $products['total_pages'];
+        $total_pages = $products['total_pages'];
             $products = $products['data'];
             // $products=collect($products);
             $products = array_map(function($element){
@@ -88,8 +72,53 @@ class ProductController extends Controller
                     // 'price' =>$variations['price']
                 ];
             },$products);
-            $data['products'] = $products ;
+            $data[$dataName] = $products ;
             $data['total_pages'] = $total_pages;
+            return $data;
+    }
+    public function getProduct($custom_id,Request $request)
+    {
+        // $custom_id = $request->query('custom_id');
+        $res = [];
+        try{
+            $product = Http::get($this->pancakeURL."products", [
+                'access_token' => $this->token,
+                // 'page' => $page,
+                // 'page_size' => $pageSize,
+                'nearly_out_of_stock' => false,
+                'sell_fast' => false,
+                'sell_slow' => false,
+                'limit_quantity_to_warn' => false,
+                'last_imported_price' => false,
+                'search' => $custom_id
+            ]);
+            $data = $this->formatOutput($product,'product');
+            $res = new Response('Get products success',$data,Status::GET_PRODUCT_SUCCESS);
+        }catch(Exception $e){
+            $res = new Response('Get products faile',$e->getMessage(),Status::GET_PRODUCT_SUCCESS);
+        }
+       
+        return $res -> createJsonResponse();
+    }
+    public function getAll(Request $request)
+    {
+        $res = [];
+        try {
+            // get all product
+            $page = $request->query('page')?$request->query('page'):1;
+            $pageSize = $request->query('page_size')?$request->query('page_size'):30;
+
+            $products = Http::get($this->pancakeURL."products", [
+                'access_token' => $this->token,
+                'page' => $page,
+                'page_size' => $pageSize,
+                'nearly_out_of_stock' => false,
+                'sell_fast' => false,
+                'sell_slow' => false,
+                'limit_quantity_to_warn' => false,
+                'last_imported_price' => false,
+            ]);
+            $data =$this-> formatOutput($products,'products');
             // dd($products);  
             $res = new Response('Get products success',$data,Status::GET_PRODUCT_SUCCESS);
         } catch (Exception $e) {

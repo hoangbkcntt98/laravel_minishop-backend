@@ -44,3 +44,4 @@ Route::get('/users',[UserController::class,'all'])->middleware(['auth:api','scop
 Passport::routes();
 Route::get('/products',[ProductController::class,'getAll']);
 Route::get('/test',[TestController::class,'test']);
+Route::get('/products/{custom_id}',[ProductController::class,'getProduct']);
