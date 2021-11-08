@@ -47,6 +47,7 @@ class ProductController extends Controller
                 'limit_quantity_to_warn' => false,
                 'last_imported_price' => false,
             ]);
+            $total_pages = $products['total_pages'];
             $products = $products['data'];
             // $products=collect($products);
             $products = array_map(function($element){
@@ -84,10 +85,10 @@ class ProductController extends Controller
                     'sizes' =>$sizes,
                     'image' => isset($variations[0]['images'][0])?$variations[0]['images'][0]:null,
                     'variations'=>$variations,
-                    'total_pages' =>$element['total_pages'] 
                     // 'price' =>$variations['price']
                 ];
             },$products);
+            $products['total_pages'] = $total_pages;
             // dd($products);  
             $res = new Response('Get products success',$products,Status::GET_PRODUCT_SUCCESS);
         } catch (Exception $e) {
