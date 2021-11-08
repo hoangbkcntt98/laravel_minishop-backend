@@ -84,6 +84,7 @@ class ProductController extends Controller
                     'sizes' =>$sizes,
                     'image' => isset($variations[0]['images'][0])?$variations[0]['images'][0]:null,
                     'variations'=>$variations,
+                    'total_pages' =>$element['total_pages'] 
                     // 'price' =>$variations['price']
                 ];
             },$products);
